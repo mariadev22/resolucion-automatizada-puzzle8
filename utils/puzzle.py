@@ -60,7 +60,7 @@ class Board:
                 new_board = copy.deepcopy(self.board)
                 new_board[x][y], new_board[nx][ny] = new_board[nx][ny], new_board[x][y]
                 neighbor = Board(new_board)
-                neighbors.append(Board(new_board))
+                neighbors.append(neighbor)
         return neighbors
     
     def to_tuple(self):
