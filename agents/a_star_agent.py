@@ -9,12 +9,15 @@ Manhattan).
 """
 
 import heapq
+import itertools
 from utils.puzzle import Board, GOAL_STATE
 from utils.heuristics import manhattan
 
 def a_star(start_board):
     # Tablero que representa la meta
     goal_board = Board(GOAL_STATE)
+    # Generador de números únicos
+    counter = itertools.count()  
 
     # Cola de prioridad
     open_set = []
@@ -24,12 +27,13 @@ def a_star(start_board):
     star_board: tablero inicial
     []: camino recorrido hasta ahora
     """
-    heapq.heappush(open_set, (manhattan(start_board.board), 0, start_board, []))
+    # Tupla: (f, contador, g, board, path)
+    heapq.heappush(open_set, (manhattan(start_board.board), 0, next(counter), start_board, []))
     visited_node = set()
 
     # Explorar nodos
     while open_set:
-        est_total_cost, cost_so_far, current, path = heapq.heappop(open_set)
+        est_total_cost, cost_so_far, _, current, path = heapq.heappop(open_set)
 
         if current == goal_board:
             return path + [current] # Tiene solución -> ruta + actual
@@ -50,6 +54,6 @@ def a_star(start_board):
                 g = cost_so_far + 1
                 h = manhattan(neighbor.board)
                 f = g + h
-                heapq.heappush(open_set, (f, g, neighbor, path + [current]))
+                heapq.heappush(open_set, (f, g, next(counter), neighbor, path + [current]))
 
     return None  # No tiene solución
