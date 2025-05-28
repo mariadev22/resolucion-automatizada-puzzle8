@@ -1,43 +1,53 @@
 import pygame
+import time
 from utils.puzzle import Board
 from ui.display import draw_ui
 from agents.bfs_agent import bfs
 from agents.a_star_agent import a_star
 
-def print_solution(solution, title):
-    print(f"\n{title} (pasos: {len(solution) - 1})")
-    for i, step in enumerate(solution):
-        print(f"\nPaso {i}")
-        step.display_console() 
+# Tablero que sí tiene solución
+BOARD = [
+    [1, 2, 3],
+    [8, 4, 0],
+    [7, 6, 5]
+]
+
+def print_solution(agent_name, solution, elapsed_time, nodes_expanded):
+    print(f"\n{agent_name} - Resultados:")
+    if solution:
+        print(f"  Tiempo de ejecución: {elapsed_time:.3f} segundos")
+        print(f"  Nodos expandidos: {nodes_expanded}")
+        print(f"  Longitud de la solución: {len(solution) - 1}")
+    else:
+        print(f"  Tiempo de ejecución: {elapsed_time:.3f} segundos")
+        print(f"  Nodos expandidos: {nodes_expanded}")
+        print("  Nose encontró solución")
 
 def main():
     # Crear tableros para dos agentes
-    board_bfs = Board()
-    board_astar = Board(board_bfs.board) # Copia exacta para comparar
+    board = Board(BOARD)
 
     print("Tablero inicial:")
-    board_bfs.display_console()
+    board.display_console()
 
     # Ejecutar BFS para el agente no informado
-    solution_bfs = bfs(board_bfs)
-    if solution_bfs:
-        print_solution(solution_bfs, "Agente No Informado (BFS)")
-    else:
-        print("\nBFS: No se encotró solución.") 
+    star_bfs = time.perf_counter()
+    bfs_solution, bfs_nodes = bfs(board)
+    end_bfs = time.perf_counter()
+    print_solution("Agente No Informado (BFS)", bfs_solution, end_bfs - star_bfs, bfs_nodes)
 
     # Ejecutar A* para el agente informado
-    solution_astar = a_star(board_astar)
-    if solution_astar:
-        print_solution(solution_astar, "Agente informado (A*)")
-    else:
-        print("\nA*: No se encontro solución.")
+    star_astar = time.perf_counter()
+    astar_solution, astar_nodes = a_star(board)
+    end_astar = time.perf_counter()
+    print_solution("Agente informado (A*)", astar_solution, end_astar - star_astar, astar_nodes)
 
     # Configurar la ventana de pygame
     pygame.init()
     screen = pygame.display.set_mode((750, 400))
     pygame.display.set_caption("Puzzle 8 - Resolución Automatizada")
 
-    draw_ui(screen, board_bfs.board, board_astar.board)
+    draw_ui(screen, board.board, board.board)
 
     # Esperar a cerrar la ventana
     running = True

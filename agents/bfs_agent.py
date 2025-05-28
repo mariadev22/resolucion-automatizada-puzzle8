@@ -12,14 +12,16 @@ from utils.puzzle import Board, GOAL_STATE
 def bfs(start_board):
     visited_node = set()
     queue = deque([(start_board, [])])  # Nodo raíz
+    nodes_expanded = 0
 
     goal = Board(GOAL_STATE)
 
     while queue:
         current, path = queue.popleft()
+        nodes_expanded += 1
 
         if current == goal:
-            return path + [current] # Tiene solución -> ruta + actual
+            return path + [current], nodes_expanded # Tiene solución -> ruta + actual
 
         state_tuple = current.to_tuple()
         if state_tuple in visited_node:
@@ -31,4 +33,4 @@ def bfs(start_board):
             if neighbor.to_tuple() not in visited_node:
                 queue.append((neighbor, path + [current]))
 
-    return None  # No tiene solución
+    return None, nodes_expanded  # No tiene solución

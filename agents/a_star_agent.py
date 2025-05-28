@@ -17,7 +17,8 @@ def a_star(start_board):
     # Tablero que representa la meta
     goal_board = Board(GOAL_STATE)
     # Generador de números únicos
-    counter = itertools.count()  
+    counter = itertools.count()
+    nodes_expanded = 0  
 
     # Cola de prioridad
     open_set = []
@@ -34,9 +35,10 @@ def a_star(start_board):
     # Explorar nodos
     while open_set:
         est_total_cost, cost_so_far, _, current, path = heapq.heappop(open_set)
+        nodes_expanded += 1
 
         if current == goal_board:
-            return path + [current] # Tiene solución -> ruta + actual
+            return path + [current], nodes_expanded # Tiene solución -> ruta + actual
 
         state_tuple = current.to_tuple()
         if state_tuple in visited_node:
@@ -56,4 +58,4 @@ def a_star(start_board):
                 f = g + h
                 heapq.heappush(open_set, (f, g, next(counter), neighbor, path + [current]))
 
-    return None  # No tiene solución
+    return None, nodes_expanded  # No tiene solución
