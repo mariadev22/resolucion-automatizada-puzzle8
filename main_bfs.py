@@ -1,18 +1,18 @@
 import pygame
 import time
 from utils.puzzle import Board
-from ui.display import draw_ui
+from ui.display import draw_ui, animate_solution
 from agents.bfs_agent import bfs
 
 # Tablero que sí tiene solución
 BOARD = [
     [1, 2, 3],
-    [8, 4, 0],
-    [7, 6, 5]
+    [8, 4, 5],
+    [7, 0, 6]
 ]
 
 def main():
-    # Crear tableros para dos agentes
+    # Crear tablero aleatorio
     board = Board(BOARD)
 
 
@@ -23,10 +23,28 @@ def main():
 
     # Configurar la ventana de pygame
     pygame.init()
-    screen = pygame.display.set_mode((750, 400))
+    screen = pygame.display.set_mode((350, 450))
     pygame.display.set_caption("Puzzle 8 - Resolución Automatizada")
 
-    draw_ui(screen, board.board, board.board)
+    if bfs_solution:
+        animate_solution(
+            "Agente BFS", 
+            screen, 
+            bfs_solution,
+            bfs_nodes,
+            len(bfs_solution) - 1,
+            end_bfs - star_bfs
+        )
+    else:
+        draw_ui(
+            "Agente BFS", 
+            screen, 
+            board.board, 
+            bfs_nodes, 
+            0, 
+            end_bfs - star_bfs
+        )
+    
 
     # Esperar a cerrar la ventana
     running = True
