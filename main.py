@@ -1,8 +1,13 @@
 import pygame
 from utils.puzzle import Board
-from ui.display import draw_board
 from ui.display import draw_ui
+from agents.bfs_agent import bfs
 
+def print_solution(solution, title):
+    print(f"\n{title} (pasos: {len(solution) - 1})")
+    for i, step in enumerate(solution):
+        print(f"\nPaso {i}")
+        step.display_console() 
 
 def main():
     # Crear tableros para dos agentes
@@ -11,6 +16,14 @@ def main():
 
     print("Agente NO informado - Tablero:")
     board1.display_console()
+
+    # Ejecutar BFS para el agente no informado
+    solution = bfs(board1)
+    if solution:
+        print_solution(solution, "Agente No Informado (BFS)")
+    else:
+        print("\nNo se encotró solución.") 
+
     print("\nAgente INFORMADO - Tablero:")
     board2.display_console()
 
