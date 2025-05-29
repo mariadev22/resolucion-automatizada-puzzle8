@@ -25,9 +25,11 @@ class Board:
     def generate_random_board(self):
         flat_goal = sum(GOAL_STATE, [])
         while True:
-            flat_board = flat_goal
+            flat_board = flat_goal[:]
             random.shuffle(flat_board)
-            if self.is_solvable(flat_board):
+            if self.is_solvable(flat_goal) % 2 == 0 and self.is_solvable(flat_board) % 2 == 0:
+                return [flat_board[i:i+3] for i in range(0, 9, 3)]
+            elif self.is_solvable(flat_goal) % 2 != 0 and self.is_solvable(flat_board) % 2 != 0:
                 return [flat_board[i:i+3] for i in range(0, 9, 3)]
 
     def is_solvable(self, flat_board):
@@ -36,12 +38,11 @@ class Board:
             for j in range(i + 1, len(flat_board)):
                 if flat_board[i] and flat_board[j] and flat_board[i] > flat_board[j]:
                     count += 1
-        return count % 2 == 0
-
+        return count
+    
     def display_console(self):
         for row in self.board:
             print(' '.join(str(cell) if cell != 0 else ' ' for cell in row))
-
 
     def find_zero(self):
         for i in range(3):
@@ -67,8 +68,11 @@ class Board:
         return tuple(tuple(row) for row in self.board)
     
     def __eq__(self, other):
-        return self.board == other.board
+        if isinstance(other, Board):
+            return self.board == other.board
+        return False
     
     def __hash__(self):
         return hash(self.to_tuple())
+
 
