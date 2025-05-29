@@ -24,7 +24,11 @@ Ambos agentes se ejecutan **en paralelo**, lo que permite visualizar en tiempo r
 
 ## 🚀 Captura de Funcionamiento
 
-📸 *(Próximamente: captura de pantalla del programa en ejecución con ambos agentes en acción)*
+📸 
+
+![alt text](image.png)
+
+![alt text](image-1.png)
 
 ---
 
